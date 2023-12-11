@@ -54,7 +54,7 @@ const UsersTab = () => {
             try {
                 const token = await currentUser.getIdToken();
 
-                const response = await axiosData.getUser();                
+                const response = await axiosData.getUser(currentUser, token);                
 
                 setData(response.data.payload);
 
@@ -62,7 +62,7 @@ const UsersTab = () => {
                 try {
                     const token = await currentUser.getIdToken();
 
-                    const response = await axiosData;                   
+                    const response = await axiosData.getRole(currentUser, token);                   
 
                     setRoles(response.data.payload);
 
@@ -312,21 +312,7 @@ const UsersTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            // call api to register a new user
-            const response = await axios.post(
-                global.APIEndpoint + "/api/user/update/admin",
-                {
-                    uid: currentUser.uid,
-                    data: editData
-                },
-                {
-                    headers:
-                    {
-                        Authorization: `${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+            const response = await axiosData.updateAdminUser(currentUser, editData, token);            
 
             // check api's reponse
             if (response.status !== 200)
