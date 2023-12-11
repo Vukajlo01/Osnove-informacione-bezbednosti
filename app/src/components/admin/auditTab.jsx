@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from 'axios';
+import axiosData from '../../services/services'
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 
@@ -25,18 +25,8 @@ const AuditLog = () => {
 
       try {
         const token = await currentUser.getIdToken();
-        const response = await axios.post(
-          global.APIEndpoint + '/api/audit/get',
-          {
-            uid: currentUser.uid,
-          },
-          {
-            headers: {
-              Authorization: `${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+
+        const response = await axiosData.getAudit(currentUser, token);      
 
         setData(response.data.payload);
         setLoading(false);
