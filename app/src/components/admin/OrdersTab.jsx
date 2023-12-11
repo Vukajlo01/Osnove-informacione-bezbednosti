@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import axiosData from '../../services/services';
+import orderData from '../../services/orderService';
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 
@@ -26,7 +26,7 @@ const OrdersTab = () => {
             try {
                 const token = await currentUser.getIdToken();
 
-                const response = await axiosData.getOrders(currentUser, token);                
+                const response = await orderData.getOrders(currentUser, token);                
 
                 setData(response.data.payload);
                 setLoading(false);
