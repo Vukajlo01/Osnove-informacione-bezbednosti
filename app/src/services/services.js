@@ -204,7 +204,7 @@ const axiosData = {
         return response;
       
       } catch (error) {
-          console.error('Error in getUser:', error);
+          console.error('Error in getRole:', error);
           throw error;
       }
     },
@@ -227,7 +227,32 @@ const axiosData = {
         return response;
       
       } catch (error) {
-          console.error('Error in getUser:', error);
+          console.error('Error in deleteUserGuid:', error);
+          throw error;
+      }
+    },
+
+    async createNewAccount(currentUser, userProperties, userData, token){
+      try{  
+        const response = await axios.post(
+          global.APIEndpoint + '/api/user/newAccount',
+          {
+            uid: currentUser.uid,
+            userProperties: userProperties,
+            userData: userData
+          },
+          {
+            headers: {
+              Authorization: `${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );                
+
+        return response;
+      
+      } catch (error) {
+          console.error('Error in createNewAccount:', error);
           throw error;
       }
     },
