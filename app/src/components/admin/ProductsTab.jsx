@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from 'axios';
+import axiosData from '../../services/services';
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { AiOutlineClose, AiFillCheckCircle } from 'react-icons/ai';
@@ -56,31 +56,17 @@ const ProductsTab = () => {
             }
 
             try {
-                const token = await currentUser.getIdToken();                
-                const response = await axios.get(global.APIEndpoint + '/api/product/get', {
-                  headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'application/json',
-                  },
-                });
+                const token = await currentUser.getIdToken();     
+                
+                const response = await axiosData.getProducts(token);                  
 
                 setData(response.data.payload);
 
                 // fetch genres from firestore
                 try {
                     const token = await currentUser.getIdToken();
-                    const response = await axios.get(
-                        global.APIEndpoint + '/api/genre/get',
-                        {
-                            uid: currentUser.uid,
-                        },
-                        {
-                            headers: {
-                                Authorization: `${token}`,
-                                'Content-Type': 'application/json',
-                            },
-                        }
-                    );
+
+                    const response = await axiosData.getGenres(currentUser, token);                    
 
                     setGenres(response.data.payload);
 
@@ -234,20 +220,9 @@ const ProductsTab = () => {
         // Handle the product deletion logic here
         try {
             const token = await currentUser.getIdToken();
-            const response = await axios.post(
-                global.APIEndpoint + "/api/product/delete",
-                {
-                    uid: uidToDelete,
-                    sellerUid: sellerUidToDelete,
-                    currentUserUid: currentUser.uid
-                },
-                {
-                    headers: {
-                        Authorization: `${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+
+            const response = await axiosData.deleteProduct(uidToDelete, sellerUidToDelete, currentUser, token)
+        
 
             if (response.status !== 200)
                 navigate('/' + response.status.toString());
@@ -294,22 +269,8 @@ const ProductsTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            // call api to register a update product
-            const response = await axios.post(
-                global.APIEndpoint + "/api/product/update/",
-                {
-                    currentUserUid: currentUser.uid,
-                    payload: editData,
-                },
-                {
-                    headers:
-                    {
-                        Authorization: `${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
+            const response = await axiosData.updateProduct(currentUser, editData, token);
+            
             // check api's reponse
             if (response.status !== 200)
                 setError(response.data.payload);
