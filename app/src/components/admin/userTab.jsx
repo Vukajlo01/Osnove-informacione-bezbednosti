@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from 'axios';
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { AiOutlineUserAdd, AiOutlineClose, AiFillCheckCircle } from 'react-icons/ai';
@@ -9,6 +8,7 @@ import { FaUserEdit, FaUserMinus, FaKey } from 'react-icons/fa';
 import { CiImageOff } from 'react-icons/ci';
 import { BsFillFileEarmarkImageFill } from 'react-icons/bs';
 import imageCompression from 'browser-image-compression';
+import admin from '../../services/admin';
 
 const UsersTab = () => {
     const navigate = useNavigate();
@@ -53,36 +53,16 @@ const UsersTab = () => {
 
             try {
                 const token = await currentUser.getIdToken();
-                const response = await axios.post(
-                    global.APIEndpoint + '/api/user/get', // Adjust the API endpoint for fetching user data
-                    {
-                        uid: currentUser.uid,
-                    },
-                    {
-                        headers: {
-                            Authorization: `${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
+
+                const response = await admin.getUsers(currentUser, token);
 
                 setData(response.data.payload);
 
                 // fetch roles from firestore
                 try {
                     const token = await currentUser.getIdToken();
-                    const response = await axios.post(
-                        global.APIEndpoint + '/api/role/get', // Adjust the API endpoint for fetching user data
-                        {
-                            uid: currentUser.uid,
-                        },
-                        {
-                            headers: {
-                                Authorization: `${token}`,
-                                'Content-Type': 'application/json',
-                            },
-                        }
-                    );
+
+                    const response = await admin.getRoles(currentUser, token);
 
                     setRoles(response.data.payload);
 
@@ -243,18 +223,8 @@ const UsersTab = () => {
         // Handle the account deletion logic here
         try {
             const token = await currentUser.getIdToken();
-            const response = await axios.post(
-                global.APIEndpoint + "/api/user/delete/guid",
-                {
-                    uid: uidToDelete,
-                },
-                {
-                    headers: {
-                        Authorization: `${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+
+            const response = await admin.deleteUser(uidToDelete, token);
 
             if (response.status !== 200)
                 navigate('/' + response.status.toString());
@@ -315,22 +285,7 @@ const UsersTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            // call api to register a new user
-            const response = await axios.post(
-                global.APIEndpoint + "/api/user/newAccount",
-                {
-                    uid: currentUser.uid,
-                    userProperties: userProperties,
-                    userData: userData
-                },
-                {
-                    headers:
-                    {
-                        Authorization: `${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+            const response = await admin.createUser(currentUser, userProperties, userData, token);
 
             // check api's reponse
             if (response.data.code !== 200)
@@ -357,21 +312,7 @@ const UsersTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            // call api to register a new user
-            const response = await axios.post(
-                global.APIEndpoint + "/api/user/update/admin",
-                {
-                    uid: currentUser.uid,
-                    data: editData
-                },
-                {
-                    headers:
-                    {
-                        Authorization: `${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+            const response = await admin.updateUser(currentUser, editData, token);
 
             // check api's reponse
             if (response.status !== 200)

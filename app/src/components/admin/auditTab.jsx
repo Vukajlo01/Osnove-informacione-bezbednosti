@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import axiosData from '../../services/services'
+import admin from '../../services/admin';
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 
@@ -26,7 +26,7 @@ const AuditLog = () => {
       try {
         const token = await currentUser.getIdToken();
 
-        const response = await axiosData.getAudit(currentUser, token);      
+        const response = await admin.getAudits(currentUser, token);      
 
         setData(response.data.payload);
         setLoading(false);
