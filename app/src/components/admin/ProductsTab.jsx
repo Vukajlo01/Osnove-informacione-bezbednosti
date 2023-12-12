@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import axiosData from '../../services/admin';
 import productData from '../../services/productService';
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
@@ -58,7 +59,7 @@ const ProductsTab = () => {
             try {
                 const token = await currentUser.getIdToken();     
                 
-                const response = await productData.getProductsAdmin(token);                  
+                const response = await productData.getProducts(token);                  
 
                 setData(response.data.payload);
 
@@ -66,7 +67,7 @@ const ProductsTab = () => {
                 try {
                     const token = await currentUser.getIdToken();
 
-                    const response = await productData.getGenres(currentUser, token);                    
+                    const response = await axiosData.getGenres(currentUser, token);                    
 
                     setGenres(response.data.payload);
 

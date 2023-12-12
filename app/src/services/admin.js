@@ -23,7 +23,30 @@ const axiosData = {
           console.error('Error in getAudit:', error);
           throw error;
       }
-    },      
+    },  
+
+    async getGenres(currentUser, token){
+      try{  
+        const response = await axios.post(
+          global.APIEndpoint + '/api/genre/get',
+          {
+            uid: currentUser.uid,
+          },
+          {
+            headers: {
+              Authorization: `${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );        
+
+        return response;
+      
+      } catch (error) {
+          console.error('Error in getGenres:', error);
+          throw error;
+      }
+    },
 
 };
 
