@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import axiosData from "../../services/services";
+import axios from "axios";
 import Navbar from "../navigation/Navbar";
 import Tabs from "../tabs/tab";
 import LoadingSpinner from "../loading/loading";
@@ -21,8 +21,18 @@ export default function Dashboard() {
 
             try {
                 const token = await currentUser.getIdToken();
-                
-                const response = await axiosData.getUserById(currentUser, token);                  
+                const response = await axios.post(
+                    global.APIEndpoint + "/api/user/getById",
+                    {
+                        uid: currentUser.uid,
+                    },
+                    {
+                        headers: {
+                            Authorization: `${token}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
 
                 if (global.WM === "WM_UNRESTRICTED") // unsecure
                     setLoading(false);
