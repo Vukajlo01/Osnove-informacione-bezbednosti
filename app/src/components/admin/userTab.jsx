@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import userData from '../../services/userService';
+import axiosData from '../../services/services';
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { AiOutlineUserAdd, AiOutlineClose, AiFillCheckCircle } from 'react-icons/ai';
@@ -54,7 +54,7 @@ const UsersTab = () => {
             try {
                 const token = await currentUser.getIdToken();
 
-                const response = await userData.getUsers(currentUser, token);                
+                const response = await axiosData.getUser(currentUser, token);                
 
                 setData(response.data.payload);
 
@@ -62,7 +62,7 @@ const UsersTab = () => {
                 try {
                     const token = await currentUser.getIdToken();
 
-                    const response = await userData.getUserRole(currentUser, token);                   
+                    const response = await axiosData.getRole(currentUser, token);                   
 
                     setRoles(response.data.payload);
 
@@ -224,7 +224,7 @@ const UsersTab = () => {
         try {
             const token = await currentUser.getIdToken();
             
-            const response = await userData.deleteUserGuid(uidToDelete, token);           
+            const response = await axiosData.deleteUserGuid(uidToDelete, token);           
 
             if (response.status !== 200)
                 navigate('/' + response.status.toString());
@@ -285,7 +285,7 @@ const UsersTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            const response = await userData.createNewAccount(currentUser, userProperties, userData, token);
+            const response = await axiosData.createNewAccount(currentUser, userProperties, userData, token);
 
             // check api's reponse
             if (response.data.code !== 200)
@@ -312,7 +312,7 @@ const UsersTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            const response = await userData.updateAdminUser(currentUser, editData, token);            
+            const response = await axiosData.updateAdminUser(currentUser, editData, token);            
 
             // check api's reponse
             if (response.status !== 200)

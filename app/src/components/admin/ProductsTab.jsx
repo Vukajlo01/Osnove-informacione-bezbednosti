@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import axiosData from '../../services/admin';
-import productData from '../../services/productService';
+import axiosData from '../../services/services';
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { AiOutlineClose, AiFillCheckCircle } from 'react-icons/ai';
@@ -59,7 +58,7 @@ const ProductsTab = () => {
             try {
                 const token = await currentUser.getIdToken();     
                 
-                const response = await productData.getProducts(token);                  
+                const response = await axiosData.getProducts(token);                  
 
                 setData(response.data.payload);
 
@@ -222,7 +221,7 @@ const ProductsTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            const response = await productData.deleteProduct(uidToDelete, sellerUidToDelete, currentUser, token)
+            const response = await axiosData.deleteProduct(uidToDelete, sellerUidToDelete, currentUser, token)
         
 
             if (response.status !== 200)
@@ -270,7 +269,7 @@ const ProductsTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            const response = await productData.updateProduct(currentUser, editData, token);
+            const response = await axiosData.updateProduct(currentUser, editData, token);
             
             // check api's reponse
             if (response.status !== 200)
