@@ -285,7 +285,22 @@ const UsersTab = () => {
         try {
             const token = await currentUser.getIdToken();
 
-            const response = await axiosData.createNewAccount(currentUser, userProperties, userData, token);
+            // call api to register a new user
+            const response = await axios.post(
+                global.APIEndpoint + "/api/user/newAccount",
+                {
+                    uid: currentUser.uid,
+                    userProperties: userProperties,
+                    userData: userData
+                },
+                {
+                    headers:
+                    {
+                        Authorization: `${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
             // check api's reponse
             if (response.data.code !== 200)
