@@ -4,7 +4,7 @@ import { Popup } from "./Popup";
 import { HeroSection } from "./Hero";
 import { Card } from "../cards/Card";
 import { Footer } from "../footer/Footer";
-import main from "../../services/main";
+import { getProducts } from '../../services/main';
 
 export default function Home() {
 
@@ -23,7 +23,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
 
-        const response = await main.getProducts();
+        const response = await getProducts();
 
         if (response.status === 200) {
           const products = response.data.payload;
@@ -63,7 +63,6 @@ export default function Home() {
         }
 
       } catch (error) {
-
       }
     };
 

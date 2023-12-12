@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import main from '../../services/main';
+import { createOrder } from '../../services/main';
 
 export const Popup = ({ data, closePopup }) => {
   const [counter, setCounter] = useState(1);
@@ -27,7 +27,7 @@ export const Popup = ({ data, closePopup }) => {
     try {
       const token = await currentUser.getIdToken();
 
-      const response = await main.creatOrder(counter, currentUser, data, token);
+      const response = await createOrder(counter, currentUser, data, token);
 
       if (response.status !== 201)
         navigate('/' + response.status.toString());

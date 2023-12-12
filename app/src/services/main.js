@@ -1,75 +1,55 @@
 import axios from 'axios';
 
-const main = {
+export async function getProducts() {
+    try {
+        const response = await axios.get(`${global.APIEndpoint}/api/product/get`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-    async getProducts() {
-        try {
-            const response = await axios.get(
-                global.APIEndpoint + '/api/product/get',
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
+        return response;
+    } catch (error) {
+        console.error('Error in getProducts:', error);
+        throw error;
+    }
+}
 
-            return response;
+export async function createOrder(counter, currentUser, data, token) {
+    try {
+        const response = await axios.post(`${global.APIEndpoint}/api/order/create`, {
+            buyQuantity: counter,
+            buyerUid: currentUser.uid,
+            product: data,
+        }, {
+            headers: {
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
 
-        } catch (error) {
-            console.error('Error in getProducts:', error);
-            throw error;
-        }
-    },
+        return response;
+    } catch (error) {
+        console.error('Error in createOrder:', error);
+        throw error;
+    }
+}
 
-    async creatOrder(counter, currentUser, data, token) {
-        try {
-            const response = await axios.post(
-                global.APIEndpoint + "/api/order/create",
-                {
-                    buyQuantity: counter,
-                    buyerUid: currentUser.uid,
-                    product: data
-                },
-                {
-                headers: {
-                    Authorization: `${token}`,
-                    "Content-Type": "application/json",
-                    },
-                }
-            );
+export async function getRoleByUid(currentUser, token) {
+    try {
+        const response = await axios.post(`${global.APIEndpoint}/api/user/getRoleByUid`, {
+            uid: currentUser.uid,
+        }, {
+            headers: {
+                Authorization: `${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
 
-            return response;
+        return response;
+    } catch (error) {
+        console.error('Error in getRoleByUid:', error);
+        throw error;
+    }
+}
 
-        } catch (error) {
-            console.error('Error in creatOrder:', error);
-            throw error;
-        }
-    },
-
-    async getRoleByUid(currentUser, token) {
-        try {
-            const response = await axios.post(
-                global.APIEndpoint + "/api/user/getRoleByUid",
-                {
-                    uid: currentUser.uid,
-                },
-                {
-                    headers: {
-                        Authorization: `${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    
-                }
-            );
-
-            return response;
-
-        } catch (error) {
-            console.error('Error in getRoleByUid:', error);
-            throw error;
-        }
-    },
-        
-};
-
-export default main;
