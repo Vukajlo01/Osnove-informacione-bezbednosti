@@ -1,11 +1,11 @@
 import Navbar from "../navigation/Navbar";
-import React, { useEffect, useState, useSyncExternalStore } from "react";
+import React, { useEffect, useState } from "react";
 import { Popup } from "./Popup";
-import Item from "../product/Item";
 import { HeroSection } from "./Hero";
 import { Card } from "../cards/Card";
 import { Footer } from "../footer/Footer";
 import axios from "axios";
+import productData from "../../services/productService";
 
 export default function Home() {
 
@@ -23,11 +23,8 @@ export default function Home() {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const response = await axios.get(global.APIEndpoint + '/api/product/get', {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+
+        const response = await productData.getProducts();      
 
         if (response.status === 200) {
           const products = response.data.payload;
