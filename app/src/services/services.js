@@ -257,31 +257,6 @@ const axiosData = {
       }
     },
 
-    async updateAdminUser(currentUser, editData, token){
-      try{  
-        const response = await axios.post(
-          global.APIEndpoint + '/api/user/update/admin',
-          {
-            uid: currentUser.uid,
-            data: editData
-          },
-          {
-            headers: {
-              Authorization: `${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );                
-
-        return response;
-      
-      } catch (error) {
-          console.error('Error in updateAdminUser:', error);
-          throw error;
-      }
-    },
-
-
     
 };
 
