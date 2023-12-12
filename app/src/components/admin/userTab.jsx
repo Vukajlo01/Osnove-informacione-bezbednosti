@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import axiosData from '../../services/services';
+import axios from 'axios';
 import LoadingSpinner from '../loading/loading';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { AiOutlineUserAdd, AiOutlineClose, AiFillCheckCircle } from 'react-icons/ai';
@@ -53,16 +53,36 @@ const UsersTab = () => {
 
             try {
                 const token = await currentUser.getIdToken();
-
-                const response = await axiosData.getUser();                
+                const response = await axios.post(
+                    global.APIEndpoint + '/api/user/get', // Adjust the API endpoint for fetching user data
+                    {
+                        uid: currentUser.uid,
+                    },
+                    {
+                        headers: {
+                            Authorization: `${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
 
                 setData(response.data.payload);
 
                 // fetch roles from firestore
                 try {
                     const token = await currentUser.getIdToken();
-
-                    const response = await axiosData;                   
+                    const response = await axios.post(
+                        global.APIEndpoint + '/api/role/get', // Adjust the API endpoint for fetching user data
+                        {
+                            uid: currentUser.uid,
+                        },
+                        {
+                            headers: {
+                                Authorization: `${token}`,
+                                'Content-Type': 'application/json',
+                            },
+                        }
+                    );
 
                     setRoles(response.data.payload);
 
@@ -223,8 +243,18 @@ const UsersTab = () => {
         // Handle the account deletion logic here
         try {
             const token = await currentUser.getIdToken();
-            
-            const response = await axiosData.deleteUserGuid(uidToDelete, token);           
+            const response = await axios.post(
+                global.APIEndpoint + "/api/user/delete/guid",
+                {
+                    uid: uidToDelete,
+                },
+                {
+                    headers: {
+                        Authorization: `${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
             if (response.status !== 200)
                 navigate('/' + response.status.toString());
